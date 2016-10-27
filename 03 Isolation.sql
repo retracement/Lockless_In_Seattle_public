@@ -98,25 +98,6 @@ SELECT  @@trancount;
 
 
 
--- Run an autocommit cross container transaction
--- Will it still work?
-/*
--- Remember the non-cross container will fail
-USE [Lockless_In_Seattle]
-GO
-BEGIN TRAN
-	SELECT * FROM LandmarksIM g1
-COMMIT
-*/
-USE [Lockless_In_Seattle]
-GO
-BEGIN TRAN
-	SELECT * FROM Landmarks imt join LandmarksIM odt on odt.LandmarkID = imt.LandmarkID
-COMMIT
-GO --strange this now fails
-
-
-
 -- Turn on MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT
 -- When this option is set to ON, access to a memory-optimized table under a lower 
 -- isolation level is automatically elevated to SNAPSHOT isolation.

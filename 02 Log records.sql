@@ -46,12 +46,12 @@ DECLARE @CurrentLSN NVARCHAR(23)
 SELECT TOP 1 @TransactionID =
         [Transaction ID], @CurrentLSN = [Current LSN]
 FROM    sys.fn_dblog(NULL, NULL)
-WHERE   Operation = 'LOP_HK'
+WHERE   Operation = 'LOP_HK' --find the hekaton operation and return transactionid and currentlsn
 ORDER BY [Current LSN] DESC;
 
 SELECT  *
 FROM    sys.fn_dblog(NULL, NULL)
-WHERE   [Transaction ID] = @TransactionID;
+WHERE   [Transaction ID] = @TransactionID; --show log records for transaction id
 
 /*Listing 6-5: Break apart a LOP_HK log record.*/
 SELECT  [Current LSN] ,
@@ -62,5 +62,5 @@ SELECT  [Current LSN] ,
         total_size ,
         OBJECT_NAME(table_id) AS TableName
 FROM    sys.fn_dblog_xtp(NULL, NULL)
-WHERE   [Current LSN] = @CurrentLSN;
+WHERE   [Current LSN] = @CurrentLSN; --break open log record for Hekaton log record LSN
 GO

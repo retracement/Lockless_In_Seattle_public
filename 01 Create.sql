@@ -103,12 +103,10 @@ AS
 	DATEFIRST = 7, -- not required
 	DATEFORMAT = 'dmy' -- not required
 	)
-
 /* Presenters note: Delayed durability can be forced or allowed on database    */
 /* via ALTER DATABASE … SET DELAYED_DURABILITY = { DISABLED | ALLOWED | FORCED */
 /* using allowed means that native compilation procedure can use it through    */
 /* DELAYED_DURABILITY = ON                                                     */
-
 	UPDATE dbo.CharactersIM 
 		SET Firstname = @NewFName, Surname = @NewLName
 		WHERE Firstname = @CurrentFName AND Surname = @NewLName;
@@ -152,11 +150,3 @@ ORDER BY file_type_desc ,
 -- Load up data (required only for further demo)
 EXEC  usp_PopulateLandmarksIM
 EXEC  usp_PopulateCharactersIM
-
-/*
---but do seem to be able to change at least the container file size afterware
-USE [master]
-GO
-ALTER DATABASE [Lockless_In_Seattle] MODIFY FILE ( NAME = N'Lockless_In_Seattle_1', MAXSIZE = 51200KB )
-GO
-*/
