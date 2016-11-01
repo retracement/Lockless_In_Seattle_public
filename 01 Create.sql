@@ -14,7 +14,6 @@
 /****************/
 /* Enable XTP   */
 /****************/
---ALTER DATABASE Lockless_In_Seattle SET ALLOW_SNAPSHOT_ISOLATION OFF
 ALTER DATABASE Lockless_In_Seattle ADD FILEGROUP imoltp_mod
 CONTAINS MEMORY_OPTIMIZED_DATA
 USE [master]
@@ -57,7 +56,7 @@ GO
 --create hash and range indexes
 CREATE TABLE CharactersIM 
 (CharacterID INT PRIMARY KEY NONCLUSTERED HASH 
-	WITH (BUCKET_COUNT=8000) NOT NULL --bucket size compromises
+	WITH (BUCKET_COUNT=8000) NOT NULL --bucket size compromises performance
 	-- Bucket count (power of two), so 2^13 = 8192
 ,[Firstname] VARCHAR(50) COLLATE Latin1_General_100_BIN2 NOT NULL 
 ,[Surname] VARCHAR(50) COLLATE Latin1_General_100_BIN2 NOT NULL --collation requirement of columns in SQL2014 indexes
@@ -141,7 +140,7 @@ SELECT '\\seattle\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DA
 -- Look at checkpoint files
 SELECT  *
 FROM    sys.dm_db_xtp_checkpoint_files
-WHERE   state = 1
+--WHERE   state = 1
 ORDER BY file_type_desc ,
         upper_bound_tsn;
 

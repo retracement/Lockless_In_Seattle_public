@@ -18,7 +18,7 @@ ALTER DATABASE Lockless_In_Seattle SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = OF
 --We are going to look at using in-memory tables under different isolation levels
 
 
--- Run an autocommit transaction
+-- Can we run an autocommit transaction
 USE [Lockless_In_Seattle]
 GO
 SELECT * FROM LandmarksIM
