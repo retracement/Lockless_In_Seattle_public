@@ -3,24 +3,24 @@
   <Items>
     <LogicalFolder Name="Connections" Type="2" Sorted="true">
       <Items>
-        <ConnectionNode Name="seattle\sql2014:sa">
-          <Created>2016-10-14T21:51:59.2329709+01:00</Created>
+        <ConnectionNode Name="server1\sql2014:HITCHHIKERS\Administrator">
+          <Created>2017-05-15T18:46:51.1737046+01:00</Created>
           <Type>SQL</Type>
-          <Server>seattle\sql2014</Server>
-          <UserName>sa</UserName>
-          <Authentication>SQL</Authentication>
+          <Server>server1\sql2014</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
           <InitialDB />
           <LoginTimeout>15</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName />
         </ConnectionNode>
-        <ConnectionNode Name="seattle\sql2016:sa">
-          <Created>2016-10-14T21:52:12.5928533+01:00</Created>
+        <ConnectionNode Name="server1\sql2016:HITCHHIKERS\Administrator">
+          <Created>2017-05-15T18:46:57.0956392+01:00</Created>
           <Type>SQL</Type>
-          <Server>seattle\sql2016</Server>
-          <UserName>sa</UserName>
-          <Authentication>SQL</Authentication>
+          <Server>server1\sql2016</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
           <InitialDB />
           <LoginTimeout>15</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
@@ -32,39 +32,39 @@
     <LogicalFolder Name="Queries" Type="0" Sorted="true">
       <Items>
         <FileNode Name="00 Setup.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:server1\sql2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>server1\sql2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>00 Setup.sql</FullPath>
         </FileNode>
         <FileNode Name="01 Create.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:server1\sql2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>server1\sql2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>01 Create.sql</FullPath>
         </FileNode>
         <FileNode Name="02 Log records.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>02 Log records.sql</FullPath>
         </FileNode>
         <FileNode Name="03 Isolation.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>03 Isolation.sql</FullPath>
         </FileNode>
         <FileNode Name="04a Concurrency Conn 1.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>04a Concurrency Conn 1.sql</FullPath>
         </FileNode>
         <FileNode Name="04b Concurrency Conn 2.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>04b Concurrency Conn 2.sql</FullPath>
         </FileNode>
         <FileNode Name="06 IM_Conn 1.sql">
@@ -80,21 +80,21 @@
           <FullPath>07 IM indev conn1.sql</FullPath>
         </FileNode>
         <FileNode Name="08 IM indev conn2.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>08 IM indev conn2.sql</FullPath>
         </FileNode>
         <FileNode Name="Demo in progress.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>Demo in progress.sql</FullPath>
         </FileNode>
         <FileNode Name="Index performance.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:seattle\sql2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>seattle\sql2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
           <FullPath>Index performance.sql</FullPath>
         </FileNode>
       </Items>
