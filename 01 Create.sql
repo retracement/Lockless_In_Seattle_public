@@ -14,38 +14,47 @@
 /****************/
 /* Enable XTP   */
 /****************/
+USE [master]
+GO
 ALTER DATABASE Lockless_In_Seattle ADD FILEGROUP imoltp_mod
 CONTAINS MEMORY_OPTIMIZED_DATA
 USE [master]
 GO
 
 
+
 /***********************************************/
 /* Add files (IMOLTP containers to filegroups) */
 /***********************************************/
--- Note. Cannot specify Initial size or autogrow settings.
+-- Add container1 - note: you cannot specify Initial size or autogrow settings.
 ALTER DATABASE [Lockless_In_Seattle] 
 	ADD FILE ( NAME = N'Lockless_In_Seattle_1', 
 	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\Lockless_In_Seattle_1' )
 	TO FILEGROUP [imoltp_mod]
 GO
 
--- Add file. Cannot specify Initial size or autogrow settings.
+-- Add container2 - note: you cannot specify Initial size or autogrow settings.
 ALTER DATABASE [Lockless_In_Seattle] 
 	ADD FILE ( NAME = N'Lockless_In_Seattle_2', 
 	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\Lockless_In_Seattle_2' )
 	TO FILEGROUP [imoltp_mod]
 GO
+/* Presenters note: It used to be important to have an uneven # */
+/* of containers for performance purposes since round-robin     */
+/* could mean all data operations in one container and all delta*/
+/* operations in another! This has now been fixed in 2016       */
+
+
+-- Look at database properties/ Filegroups (note MEMORY OPTIMIZED DATA PANE)
 
 
 
--- Look at database file properties (note file type)
+-- Look at database properties/ file (note file type)
 
 
 
 -- Look at Process Explorer (on host) and search for term XTP
 -- See anything? Why/ Why not?
-
 
 
 /***************************/
@@ -75,8 +84,9 @@ CREATE TABLE CitiesIM
 	WITH (MEMORY_OPTIMIZED=ON) 
 GO
 
-
-CREATE TABLE LandmarksIM (LandMarkID int primary key NONCLUSTERED HASH WITH (BUCKET_COUNT=16) NOT NULL
+CREATE TABLE LandmarksIM 
+	(LandMarkID INT PRIMARY KEY NONCLUSTERED HASH 
+	WITH (BUCKET_COUNT=16) NOT NULL
 	, Title VARCHAR(25), IsDestination bit) WITH (MEMORY_OPTIMIZED=ON) 
 GO
 
@@ -119,22 +129,21 @@ GO
 /***************/
 /* Linked DLLS */
 /***************/
--- Look at Process Explorer on SQL Server Host and search for term XTP
--- See anything? Why/ Why not?
--- notice the new DLLs -if there is one per table, 
--- why do we only have 2 DLLs after creating four tables?
+-- Now look at Process Explorer on SQL Host & search for term XTP
+-- Find anything?
+-- Notice the new DLLs - there is 1 per IM table & 1 per Native Comp SP
 
 
 
 -- Look at source
-SELECT '\\seattle\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\xtp\5'
+SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\xtp\5'
 -- Open C files. see the obfuscation
 
 
 
 -- Look at the two containers
 -- See Lockless_In_Seattle_1 and Lockless_In_Seattle_2 directories in 
-SELECT '\\seattle\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\' AS ContainerRoot
+SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\' AS ContainerRoot
 
 
 

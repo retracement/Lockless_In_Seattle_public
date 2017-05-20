@@ -27,18 +27,18 @@ GO
 
 
 -- Lets try this as an explicit transaction
+-- Will this work?
 USE [Lockless_In_Seattle]
 GO
 BEGIN TRAN
 	SELECT * FROM LandmarksIM
 ROLLBACK
-/*
-Msg 41368, Level 16, State 0, Line 14
-*/
 
 
--- Lets try this as an explicit transaction
+
+-- Lets repeat as an explicit transaction
 -- by setting the session isolation level to snapshot
+-- Will this work?
 SET TRANSACTION ISOLATION LEVEL SNAPSHOT
 USE [Lockless_In_Seattle]
 GO
@@ -50,8 +50,8 @@ SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 
 
--- Lets try this as an explicit transaction
--- with the SNAPSHOT HINT
+-- Lets try as an explicit transaction with SNAPSHOT HINT
+-- Will this work?
 USE [Lockless_In_Seattle]
 GO
 BEGIN TRAN
@@ -61,20 +61,20 @@ ROLLBACK
 /* Presenters note: Interesting that the use of the SNAPSHOT  */
 /* hint might indicate that snapshot duration is only for     */
 /* the statement duration. This clearly would not make sense  */
-/* for SNAPSHOT, and scope *is* for the duration of the       */
+/* for SNAPSHOT tran, & scope *is* for the duration of the    */
 /* transaction. Scope similar to statement Serializable hints */
 /* e.g.
 -- Transaction1
 BEGIN TRAN
 	SELECT * FROM LandmarksIM WITH (SNAPSHOT) --returns result set 1
-	-- Transaction2 updates a row (in new connection)
-	SELECT * FROM LandmarksIM WITH (SNAPSHOT) --returns result set 1
+	-- (Another transaction) Transaction2 updates a row (in new connection)
+	SELECT * FROM LandmarksIM WITH (SNAPSHOT) --returns SAME result set 1
 COMMIT
 */
 
 
 
--- Lets try this as an explicit transaction
+-- Lets also try this as an explicit transaction
 -- with the REPEATABLEREAD HINT and SERIALIZABLE HINT
 USE [Lockless_In_Seattle]
 GO

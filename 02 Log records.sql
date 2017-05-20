@@ -38,22 +38,24 @@ EXEC  usp_PopulateCitiesIM
 
 
 
--- you will see that SQL Server logged 151 log records
+-- Note that SQL Server logged 3 log records this time
 -- look at the log and return topmost In-Memory OLTP transaction
 DECLARE @TransactionID NVARCHAR(14)
 DECLARE @CurrentLSN NVARCHAR(23)
 
+-- Find [Transaction ID] & [Current LSN] for most recent LOP_HK record
 SELECT TOP 1 @TransactionID =
         [Transaction ID], @CurrentLSN = [Current LSN]
 FROM    sys.fn_dblog(NULL, NULL)
-WHERE   Operation = 'LOP_HK' --find the hekaton operation and return transactionid and currentlsn
+WHERE   Operation = 'LOP_HK' --the hekaton logical op record
 ORDER BY [Current LSN] DESC;
 
+-- Show those log records for transaction id of the LOP_HK
 SELECT  *
 FROM    sys.fn_dblog(NULL, NULL)
-WHERE   [Transaction ID] = @TransactionID; --show log records for transaction id
+WHERE   [Transaction ID] = @TransactionID;
 
-/*Listing 6-5: Break apart a LOP_HK log record.*/
+-- Break open log record for Hekaton log record LSN
 SELECT  [Current LSN] ,
         [Transaction ID] ,
         Operation ,
@@ -62,5 +64,5 @@ SELECT  [Current LSN] ,
         total_size ,
         OBJECT_NAME(table_id) AS TableName
 FROM    sys.fn_dblog_xtp(NULL, NULL)
-WHERE   [Current LSN] = @CurrentLSN; --break open log record for Hekaton log record LSN
+WHERE   [Current LSN] = @CurrentLSN; 
 GO
