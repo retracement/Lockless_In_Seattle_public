@@ -12,9 +12,11 @@
 ************************************************************/
 
 /******************************************************/
-/* Write Governance On-disk Optimistic (Connection 2) */
+/* Write Governance On-Disk Optimistic (Connection 2) */
 /******************************************************/
 -- Update Last Vegas population On-Disk table
+USE Lockless_In_Seattle
+GO
 IF @@TRANCOUNT > 0 ROLLBACK
 SET TRANSACTION ISOLATION LEVEL SNAPSHOT
 BEGIN TRAN
@@ -24,7 +26,7 @@ BEGIN TRAN
 
 
 
--- Stop execution
+-- Stop execution (because session is blocked)
 -- Switch to connection 1
 
 
@@ -32,11 +34,15 @@ BEGIN TRAN
 /********************************************************/
 /* Write Governance In-Memory Optimistic (Connection 2) */
 /********************************************************/
--- Revert to default
+-- Update Last Vegas population In-Memory table
+-- (Demonstrate updating the same record)
+
+-- Rollback any open transactions
+IF @@TRANCOUNT > 0 ROLLBACK
+
+-- Revert to default isolation level
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
--- Update Last Vegas population In-Memory table
-IF @@TRANCOUNT > 0 ROLLBACK
 BEGIN TRAN
 	UPDATE citiesim 
 		WITH (SNAPSHOT)
@@ -50,6 +56,7 @@ BEGIN TRAN
 
 
 -- Update Last Vegas population In-Memory table
+-- (Demonstrate updating the same record at different intervals)
 IF @@TRANCOUNT > 0 ROLLBACK
 BEGIN TRAN
 	UPDATE citiesim 

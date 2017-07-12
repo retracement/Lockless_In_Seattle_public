@@ -106,17 +106,17 @@ CREATE PROCEDURE dbo.UpdateCharacter
 	SCHEMABINDING, -- prevent drop
 	EXECUTE AS OWNER -- execution context required either OWNER/SELF/USER
 AS
-	BEGIN ATOMIC WITH -- Open tran or savepoint
+	BEGIN ATOMIC WITH -- Create tran if no open or create savepoint
 	(TRANSACTION ISOLATION LEVEL = SNAPSHOT, -- SERIALIZABLE or REPEATABLE READ
 	LANGUAGE = N'british', -- language required
 	DELAYED_DURABILITY = OFF, -- not required
 	DATEFIRST = 7, -- not required
 	DATEFORMAT = 'dmy' -- not required
 	)
-/* Presenters note: Delayed durability can be forced or allowed on database    */
-/* via ALTER DATABASE … SET DELAYED_DURABILITY = { DISABLED | ALLOWED | FORCED */
-/* using allowed means that native compilation procedure can use it through    */
-/* DELAYED_DURABILITY = ON                                                     */
+	/* Presenters note: Delayed durability can be forced or allowed on database    */
+	/* via ALTER DATABASE … SET DELAYED_DURABILITY = { DISABLED | ALLOWED | FORCED */
+	/* using allowed means that native compilation procedure can use it through    */
+	/* DELAYED_DURABILITY = ON                                                     */
 	UPDATE dbo.CharactersIM 
 		SET Firstname = @NewFName, Surname = @NewLName
 		WHERE Firstname = @CurrentFName AND Surname = @NewLName;
@@ -159,3 +159,5 @@ ORDER BY file_type_desc ,
 -- Load up data (required only for further demo)
 EXEC  usp_PopulateLandmarksIM
 EXEC  usp_PopulateCharactersIM
+EXEC  usp_PopulateCities
+EXEC  usp_PopulateCitiesIM 

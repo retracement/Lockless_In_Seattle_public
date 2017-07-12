@@ -12,15 +12,20 @@
 ************************************************************/
 
 -- Transition database to allow SNAPSHOT isolation (on-disk)
+USE master;
+GO
 ALTER DATABASE [Lockless_In_Seattle] 
 	SET ALLOW_SNAPSHOT_ISOLATION ON --Note this is only needed for on-disk snapshot!
 GO
 
 
+
 /******************************************************/
-/* Write Governance On-disk Optimistic (Connection 1) */
+/* Write Governance On-Disk Optimistic (Connection 1) */
 /******************************************************/
 -- Update Last Vegas population On-Disk table
+USE Lockless_In_Seattle
+GO
 IF @@TRANCOUNT > 0 ROLLBACK
 SET TRANSACTION ISOLATION LEVEL SNAPSHOT
 BEGIN TRAN
@@ -37,13 +42,16 @@ BEGIN TRAN
 /********************************************************/
 /* Write Governance In-Memory Optimistic (Connection 1) */
 /********************************************************/
--- Revert to default
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-
 -- Update Last Vegas population In-Memory table
+-- (Demonstrate updating the same record)
+
+-- Rollback any open transactions
 IF @@TRANCOUNT > 0 ROLLBACK
+
+-- Revert to default isolation level
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 BEGIN TRAN
-	UPDATE citiesim 
+	UPDATE citiesim -- in memory oltp table
 		WITH (SNAPSHOT) -- note this hint only valid syntax for upd with IM tables
 		SET population = population + 1
 		WHERE [name] = 'Las Vegas'
@@ -54,13 +62,14 @@ BEGIN TRAN
 
 
 
--- Update Last Vegas population In-Memory table
+-- Update Texas population In-Memory table
+-- (Demonstrate updating the same record at different intervals)
 IF @@TRANCOUNT > 0 ROLLBACK
 BEGIN TRAN
 	UPDATE citiesim 
 		WITH (SNAPSHOT)
 		SET population = population + 1
-		WHERE State = 'Texas'
+		WHERE State = 'Texas' --19 rows updated
 
 
 
@@ -76,7 +85,8 @@ BEGIN TRAN
 
 
 
-/* Presenters note: Very quick and efficient termination     */
-/* of conflicted transaction, however is obviously important */
-/* to avoid write conflicts (especially if you have large    */
-/* number of transactions                                    */
+/* Presenters note: Very quick and efficient termination of conflicted */
+/* transaction, however is obviously important to avoid write conflict */
+/* (especially if you have large number of transactional changes!)     */
+/* In other-words transaction that did the most work doesn't           */
+/* necessarily win! */

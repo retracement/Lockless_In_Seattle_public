@@ -10,15 +10,16 @@
 *   system, without the prior written permission of the     *
 *   copyright owner and the publisher.                      *
 ************************************************************/
+ -- We already transactionally inserted:
+ -- 151 records into the ondisk table
+ -- 151 records into the in-memory table
+ -- at end of script 01 Create.sql (when we loaded table data)
  
- --insert 151 cities ondisk table
-USE Lockless_In_Seattle
-GO
-EXEC  usp_PopulateCities
-
-
-
--- you will see that SQL Server logged 151 log records
+/*******************/
+/* On-Disk Logging */
+/*******************/
+-- See how many log records exist in the SQL Server transaction log
+-- for the on-disk Cities table
 USE Lockless_In_Seattle
 GO
 SELECT  *
@@ -31,18 +32,16 @@ GO
 
 
 
---insert 151 cities in-memory table
-USE Lockless_In_Seattle
-GO
-EXEC  usp_PopulateCitiesIM 
+/*********************/
+/* In-Memory Logging */
+/*********************/
+-- See how many log records exist in the SQL Server transaction log
+-- for the on-disk Cities table
 
-
-
--- Note that SQL Server logged 3 log records this time
--- look at the log and return topmost In-Memory OLTP transaction
 DECLARE @TransactionID NVARCHAR(14)
 DECLARE @CurrentLSN NVARCHAR(23)
 
+-- Look at the log and return topmost In-Memory OLTP transaction
 -- Find [Transaction ID] & [Current LSN] for most recent LOP_HK record
 SELECT TOP 1 @TransactionID =
         [Transaction ID], @CurrentLSN = [Current LSN]
@@ -50,19 +49,24 @@ FROM    sys.fn_dblog(NULL, NULL)
 WHERE   Operation = 'LOP_HK' --the hekaton logical op record
 ORDER BY [Current LSN] DESC;
 
--- Show those log records for transaction id of the LOP_HK
+SELECT 
+	@TransactionID AS '[Transaction ID]',
+	@CurrentLSN AS '[Current LSN]'
+
+-- Show those log records for [Transaction ID] of the LOP_HK
 SELECT  *
 FROM    sys.fn_dblog(NULL, NULL)
 WHERE   [Transaction ID] = @TransactionID;
 
 -- Break open log record for Hekaton log record LSN
-SELECT  [Current LSN] ,
-        [Transaction ID] ,
-        Operation ,
-        operation_desc ,
-        tx_end_timestamp ,
-        total_size ,
-        OBJECT_NAME(table_id) AS TableName
+SELECT  
+	[Current LSN],
+	[Transaction ID],
+	Operation,
+	operation_desc,
+	tx_end_timestamp,
+	total_size,
+	OBJECT_NAME(table_id) AS TableName
 FROM    sys.fn_dblog_xtp(NULL, NULL)
 WHERE   [Current LSN] = @CurrentLSN; 
 GO
