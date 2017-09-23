@@ -91,11 +91,13 @@ GO
 SELECT  *
 FROM    LandmarksIM;
 GO
+
+
+
 SET IMPLICIT_TRANSACTIONS OFF;
 IF @@TRANCOUNT > 0
     ROLLBACK;
 SELECT  @@trancount;
-
 
 
 -- Turn on MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT
@@ -103,7 +105,7 @@ SELECT  @@trancount;
 -- isolation level is automatically elevated to SNAPSHOT isolation.
 ALTER DATABASE Lockless_In_Seattle SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON
 
--- Lets now try this as an explicit transaction again
+-- Lets now try this as an explicit transaction under readcommitted again
 -- Will it still fail?
 USE [Lockless_In_Seattle]
 GO

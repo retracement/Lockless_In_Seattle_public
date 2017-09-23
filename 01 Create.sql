@@ -131,13 +131,14 @@ GO
 /***************/
 -- Now look at Process Explorer on SQL Host & search for term XTP
 -- Find anything?
--- Notice the new DLLs - there is 1 per IM table & 1 per Native Comp SP
+-- Notice the new DLLs - there is 1 per IM table (3) & 1 per Native Comp SP (1)
 
 
 
 -- Look at source
 SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\xtp\5'
--- Open C files. see the obfuscation
+-- Open file path 
+-- Open C files in notepad++. see the obfuscation
 
 
 
