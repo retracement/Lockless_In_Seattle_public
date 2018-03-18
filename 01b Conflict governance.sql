@@ -25,7 +25,6 @@ BEGIN TRAN
 	WHERE [name] = 'Las Vegas'
 
 
-
 -- Stop execution (because session is blocked)
 -- Switch to connection 1
 
@@ -42,7 +41,6 @@ IF @@TRANCOUNT > 0 ROLLBACK
 
 -- Revert to default isolation level
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-
 BEGIN TRAN
 	UPDATE citiesim 
 		WITH (SNAPSHOT)
@@ -50,7 +48,7 @@ BEGIN TRAN
 		WHERE [name] = 'Las Vegas'
 
 
-
+-- Conflict detected, transaction rolled back
 -- Switch to connection 1
 
 
@@ -67,7 +65,6 @@ BEGIN TRAN
 
 
 -- Switch to connection 1
-
 
 
 IF @@TRANCOUNT > 0 ROLLBACK

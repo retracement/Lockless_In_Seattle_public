@@ -34,7 +34,6 @@ BEGIN TRAN
 		WHERE [name] = 'Las Vegas'
 
 
-
 -- Switch to connection 2
 
 
@@ -72,9 +71,7 @@ BEGIN TRAN
 		WHERE State = 'Texas' --19 rows updated
 
 
-
 -- Switch to connection 2
-
 
 
 	-- Now update the already updated record!
@@ -82,8 +79,6 @@ BEGIN TRAN
 		WITH (SNAPSHOT)
 		SET population = population + 1 
 		WHERE [name] = 'Las Vegas'
-
-
 
 /* Presenters note: Very quick and efficient termination of conflicted */
 /* transaction, however is obviously important to avoid write conflict */

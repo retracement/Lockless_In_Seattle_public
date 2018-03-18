@@ -23,6 +23,7 @@ TRUNCATE TABLE Cities
 -- Insert 151 records into the ondisk table
 EXEC usp_PopulateCities 
 
+
 DECLARE @TransactionID NVARCHAR(14)
 DECLARE @CurrentLSN NVARCHAR(23)
 
@@ -53,11 +54,12 @@ DELETE FROM CitiesIM
 -- Insert 151 records into the in-memory table
 EXEC  usp_PopulateCitiesIM
 
-DECLARE @TransactionID NVARCHAR(14)
-DECLARE @CurrentLSN NVARCHAR(23)
+
 
 -- Look at the log and return topmost In-Memory OLTP transaction
 -- Find [Transaction ID] & [Current LSN] for most recent LOP_HK record
+DECLARE @TransactionID NVARCHAR(14)
+DECLARE @CurrentLSN NVARCHAR(23)
 SELECT TOP 1 @TransactionID =
         [Transaction ID], @CurrentLSN = [Current LSN]
 	FROM    sys.fn_dblog(NULL, NULL)
@@ -74,14 +76,15 @@ SELECT  *
 	WHERE   [Transaction ID] = @TransactionID;
 
 -- Break open log record for Hekaton log record LSN
+-- Break open log record for Hekaton log record LSN
 SELECT  
 	[Current LSN],
 	[Transaction ID],
 	Operation,
 	operation_desc,
 	tx_end_timestamp,
-	total_size,
-	OBJECT_NAME(table_id) AS TableName
+	total_size--,
+	-- OBJECT_NAME(table_id) AS TableName --not available in 2017!!!
 	FROM    sys.fn_dblog_xtp(NULL, NULL)
-	WHERE   [Current LSN] = @CurrentLSN; 
+	WHERE   [Current LSN] = @CurrentLSN;
 GO

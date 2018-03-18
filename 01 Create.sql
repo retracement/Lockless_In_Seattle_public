@@ -29,14 +29,14 @@ GO
 -- Add container1 - note: you cannot specify Initial size or autogrow settings.
 ALTER DATABASE [Lockless_In_Seattle] 
 	ADD FILE ( NAME = N'Lockless_In_Seattle_1', 
-	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\Lockless_In_Seattle_1' )
+	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQL2017\MSSQL\DATA\Lockless_In_Seattle_1') -- path for my SQL 2017 instance
 	TO FILEGROUP [imoltp_mod]
 GO
 
 -- Add container2 - note: you cannot specify Initial size or autogrow settings.
 ALTER DATABASE [Lockless_In_Seattle] 
 	ADD FILE ( NAME = N'Lockless_In_Seattle_2', 
-	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\Lockless_In_Seattle_2' )
+	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQL2017\MSSQL\DATA\Lockless_In_Seattle_2') -- path for my SQL 2017 instance
 	TO FILEGROUP [imoltp_mod]
 GO
 /* Presenters note: It used to be important to have an uneven # */
@@ -48,11 +48,15 @@ GO
 -- Look at database properties/ Filegroups (note MEMORY OPTIMIZED DATA PANE)
 
 
-
 -- Look at database properties/ file (note file type)
 
 
+-- Manually add file (and notice initial size
+-- AND max size/ autogrowth settings)
+-- FILE ( NAME = N'Lockless_In_Seattle_3', 
+-- FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQL2017\MSSQL\DATA\Lockless_In_Seattle_3') -- path to my SQL 2017 instance
 
+	
 -- Look at Process Explorer (on host) and search for term XTP
 -- See anything? Why/ Why not?
 
@@ -113,16 +117,15 @@ AS
 	DATEFIRST = 7, -- not required
 	DATEFORMAT = 'dmy' -- not required
 	)
-	/* Presenters note: Delayed durability can be forced or allowed on database    */
-	/* via ALTER DATABASE … SET DELAYED_DURABILITY = { DISABLED | ALLOWED | FORCED */
-	/* using allowed means that native compilation procedure can use it through    */
-	/* DELAYED_DURABILITY = ON                                                     */
 	UPDATE dbo.CharactersIM 
 		SET Firstname = @NewFName, Surname = @NewLName
 		WHERE Firstname = @CurrentFName AND Surname = @NewLName;
-
 	END
 GO
+/* Presenters note: Delayed durability can be forced or allowed on database    */
+/* via ALTER DATABASE … SET DELAYED_DURABILITY = { DISABLED | ALLOWED | FORCED */
+/* using allowed means that native compilation procedure can use it through    */
+/* DELAYED_DURABILITY = ON                                                     */
 
 
 
@@ -130,22 +133,22 @@ GO
 /* Linked DLLS */
 /***************/
 -- Now look at Process Explorer on SQL Host & search for term XTP
--- Find anything?
--- Notice the new DLLs - there is 1 per IM table (3) & 1 per Native Comp SP (1)
+-- Find anything? Notice the new DLLs!
+-- There is 1 per IM table (3) & 1 per Native Comp SP (1)
 
 
 
 -- Look at source
-SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\xtp\5'
+SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL14.SQL2017\MSSQL\DATA\xtp\5' AS SourceCode -- path for my SQL 2017 instance
 -- Open file path 
--- Open C files in notepad++. see the obfuscation
+-- Open C files in notepad++. See the obfuscation
 
 
-
--- Look at the two containers
--- See Lockless_In_Seattle_1 and Lockless_In_Seattle_2 directories in 
-SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL12.SQL2014\MSSQL\DATA\' AS ContainerRoot
-
+-- Look at the three containers
+-- See Lockless_In_Seattle_1, Lockless_In_Seattle_2 
+-- and Lockless_In_Seattle_3 directories
+SELECT '\\server1\c$\Program Files\Microsoft SQL Server\MSSQL14.SQL2017\MSSQL\DATA\'  AS ContainerRoot -- path for my SQL 2017 instance
+-- Open file path 
 
 
 -- Look at checkpoint files
@@ -154,7 +157,13 @@ FROM    sys.dm_db_xtp_checkpoint_files
 --WHERE   state = 1
 ORDER BY file_type_desc ,
         upper_bound_tsn;
-
+/*
+PRECREATED (available but no data),
+UNDER CONSTRUCTION (being populated but no current chkpnt),
+ACTIVE (populated closed container with inserts/deletes/chkpnts),
+MERGE TARGET (consolidation target from other containers),
+WAITING FOR LOG TRUNCATION (can be removed once log truncated)
+*/
 
 
 -- Load up data (required only for further demo)

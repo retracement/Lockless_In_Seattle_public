@@ -103,7 +103,10 @@ SELECT  @@trancount;
 -- Turn on MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT
 -- When this option is set to ON, access to a memory-optimized table under a lower 
 -- isolation level is automatically elevated to SNAPSHOT isolation.
-ALTER DATABASE Lockless_In_Seattle SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON
+ALTER DATABASE Lockless_In_Seattle 
+SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON
+
+
 
 -- Lets now try this as an explicit transaction under readcommitted again
 -- Will it still fail?
